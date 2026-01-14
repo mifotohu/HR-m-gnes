@@ -21,11 +21,3 @@
     "vite": "^6.2.0"
   }
 }
-"dependencies": {
-  "lucide-react": "^0.284.0",
-  "next": "latest",
-  "react": "latest",
-  "react-dom": "latest",
-  "clsx": "^2.0.0",
-  "tailwind-merge": "^1.14.0"
-}
