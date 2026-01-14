@@ -2,8 +2,10 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ApplicationData, GenerationResult } from "../types";
 
-export const generateHRMaterials = async (data: ApplicationData): Promise<GenerationResult> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+export const generateHRMaterials = async (data: ApplicationData & { customApiKey?: string }): Promise<GenerationResult> => {
+  // Use the user-provided API key if available, otherwise fallback to the environment variable
+  const apiKeyToUse = data.customApiKey || process.env.API_KEY;
+  const ai = new GoogleGenAI({ apiKey: apiKeyToUse || "" });
   
   const promptText = `
     SZEREPKÖR:
@@ -30,7 +32,7 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
     1. ATS ÉS AI-BOT OPTIMALIZÁLÁS: Használd a JD_DATA kulcsszavait természetes módon. A szemantikai struktúra legyen olyan, hogy az előválasztó rendszerek magas pontszámot adjanak.
     2. AI-TUDÁS INTEGRÁCIÓ: Építsd be az AI_SKILLS értékeket. 4-5 szint esetén emeld ki mint stratégiai versenyelőnyt, 1-3 szint esetén magabiztos digitális kompetenciaként.
     3. 2026-OS TRENDEK: Kerüld a sablonos fordulatokat. Légy lényegre törő és jövőorientált.
-    4. STÍLUS ÉS HANGNEM: Szigorúan tartsd magad a kiválasztott STYLE (${data.style}) és TONE (${data.tone}) hangvételéhez. Ha a TONE 'Tegező', használd a közvetlenebb stílust, ha 'Magázó' vagy 'Üzleties', maradj a formálisabb kereteknél.
+    4. STÍLUS ÉS HANGNEM: Szigorúan tartsd magad a kiválasztott STYLE (${data.style}) és TONE (${data.tone}) hangvételéhez.
 
     KIMENETI ELVÁRÁSOK:
     - subject: Kattintás-optimalizált tárgy.
