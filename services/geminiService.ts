@@ -3,7 +3,6 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { ApplicationData, GenerationResult } from "../types";
 
 export const generateHRMaterials = async (data: ApplicationData & { customApiKey?: string }): Promise<GenerationResult> => {
-  // Use the user-provided API key if available, otherwise fallback to the environment variable
   const apiKeyToUse = data.customApiKey || process.env.API_KEY;
   const ai = new GoogleGenAI({ apiKey: apiKeyToUse || "" });
   
@@ -28,20 +27,19 @@ export const generateHRMaterials = async (data: ApplicationData & { customApiKey
 
     ${data.cvFile ? 'MEGJEGYZÉS: A pályázó önéletrajzát csatolt dokumentumként (PDF/Word) küldtük el. Kérlek, elemezd azt alaposan.' : `- CV_DATA (kinyert szöveg): ${data.cvData}`}
 
-    STRATÉGIA:
-    1. ATS ÉS AI-BOT OPTIMALIZÁLÁS: Használd a JD_DATA kulcsszavait természetes módon. A szemantikai struktúra legyen olyan, hogy az előválasztó rendszerek magas pontszámot adjanak.
-    2. AI-TUDÁS INTEGRÁCIÓ: Építsd be az AI_SKILLS értékeket. 4-5 szint esetén emeld ki mint stratégiai versenyelőnyt, 1-3 szint esetén magabiztos digitális kompetenciaként.
-    3. 2026-OS TRENDEK: Kerüld a sablonos fordulatokat. Légy lényegre törő és jövőorientált.
+    STRATÉGIA ÉS ADATELLENŐRZÉS:
+    1. ATS ÉS AI-BOT OPTIMALIZÁLÁS: Használd a JD_DATA kulcsszavait természetes módon.
+    2. CV INTEGRITÁS ELLENŐRZÉSE: Kiemelten figyelj a kinyert adatok pontosságára.
+    3. SKILL ALIGNMENT: Számítsd ki, hogy a jelölt megadott AI készségei (1-5) mennyire felelnek meg a JD-ben elvártaknak. Generálj 0-100 közötti pontszámokat.
     4. STÍLUS ÉS HANGNEM: Szigorúan tartsd magad a kiválasztott STYLE (${data.style}) és TONE (${data.tone}) hangvételéhez.
 
     KIMENETI ELVÁRÁSOK:
     - subject: Kattintás-optimalizált tárgy.
-    - emailTemplate: RÉSZLETES, meggyőző és szakmai üzenet. 
-      !!! KRITIKUS: A hossza legyen MINIMUM 1000 karakter !!! 
-      Tartalmazzon részletes bemutatkozást, az AI-kompetenciák kifejtését, értékajánlatot és konkrét kapcsolódási pontokat a cég céljaihoz.
-    - coverLetter: Professzionális dokumentum. Hossza: MAXIMUM EGY A4-ES OLDAL (kb. 2500-3000 karakter). 
-      Tagolt, modern struktúra, amely figyelembe veszi az AI-alapú előszűrést is.
-    - salaryNote: Ha van bérigény, építsd be elegánsan a szövegbe vagy a végére.
+    - emailTemplate: RÉSZLETES (min. 1000 karakter), meggyőző üzenet.
+    - coverLetter: Professzionális dokumentum, modern struktúra.
+    - salaryNote: Elegánsan beépített bérigény.
+    - cvAnalysisReport: Jelentés a CV adatok pontosságáról.
+    - skillAlignment: 5 darab objektumot tartalmazó tömb (label: készség neve, score: 0-100 illeszkedés).
 
     Válaszolj JSON formátumban.
   `;
@@ -69,10 +67,22 @@ export const generateHRMaterials = async (data: ApplicationData & { customApiKey
           emailTemplate: { type: Type.STRING },
           coverLetter: { type: Type.STRING },
           salaryNote: { type: Type.STRING },
+          cvAnalysisReport: { type: Type.STRING },
+          skillAlignment: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                label: { type: Type.STRING },
+                score: { type: Type.NUMBER }
+              },
+              required: ["label", "score"]
+            }
+          }
         },
-        required: ["subject", "emailTemplate", "coverLetter"]
+        required: ["subject", "emailTemplate", "coverLetter", "cvAnalysisReport", "skillAlignment"]
       },
-      temperature: 0.8,
+      temperature: 0.7,
     },
   });
 

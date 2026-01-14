@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { generateHRMaterials } from './services/geminiService';
-import { ApplicationData, GenerationResult, StyleType, ToneType, AISkills, FileData } from './types';
+import { ApplicationData, GenerationResult, StyleType, ToneType, AISkills, FileData, SkillMatch } from './types';
 import SkillSlider from './components/SkillSlider';
 import { 
   Send, 
@@ -29,7 +29,10 @@ import {
   Info,
   ExternalLink,
   ChevronRight,
-  HelpCircle
+  HelpCircle,
+  SearchCheck,
+  CheckCircle2,
+  BarChart3
 } from 'lucide-react';
 
 const STORAGE_KEY = 'hr_magnet_api_key';
@@ -195,11 +198,8 @@ const App: React.FC = () => {
                 className="w-full bg-slate-950/50 border border-white/10 rounded-xl pl-10 pr-10 py-2 text-xs md:text-sm focus:ring-2 focus:ring-blue-500/50 transition-all outline-none font-mono placeholder:text-slate-700 shadow-inner"
               />
               
-              {/* Beginner Tooltip Icon */}
               <div className="absolute right-3 top-1/2 -translate-y-1/2 group/tooltip">
                 <HelpCircle className="w-4 h-4 text-slate-600 hover:text-blue-400 cursor-help transition-colors" />
-                
-                {/* Tooltip Content */}
                 <div className="invisible group-hover/tooltip:visible absolute right-0 top-full mt-4 w-72 md:w-80 p-5 glass border border-blue-500/30 rounded-2xl z-[60] shadow-2xl transition-all opacity-0 group-hover/tooltip:opacity-100 translate-y-2 group-hover/tooltip:translate-y-0">
                   <div className="flex items-center space-x-2 mb-3 text-blue-400">
                     <Sparkles className="w-4 h-4" />
@@ -238,7 +238,6 @@ const App: React.FC = () => {
               <span>Ingyenes kulcs kérése</span>
               <ExternalLink className="w-3 h-3" />
             </a>
-            {/* Small Mobile Link */}
             <a 
               href="https://aistudio.google.com/app/apikey" 
               target="_blank" 
@@ -522,6 +521,52 @@ const App: React.FC = () => {
                     <span>ÚJRAGENERÁLÁS</span>
                   </button>
                 </div>
+
+                {/* AI Skill Alignment Chart */}
+                <div className="glass p-6 rounded-2xl space-y-6 border-l-4 border-l-blue-400 overflow-hidden relative">
+                   <div className="absolute -right-8 -top-8 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                   <div className="flex items-center justify-between relative z-10">
+                    <div className="flex items-center space-x-2">
+                      <BarChart3 className="w-4 h-4 text-blue-400" />
+                      <span className="text-xs font-bold uppercase tracking-wider text-slate-500">AI Készség-Illeszkedési Diagram</span>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-5">
+                    {result.skillAlignment.map((skill, idx) => (
+                      <div key={idx} className="space-y-1.5">
+                        <div className="flex justify-between items-end">
+                          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">{skill.label}</span>
+                          <span className="text-xs font-mono font-bold text-blue-400">{skill.score}% Match</span>
+                        </div>
+                        <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden border border-white/5">
+                          <div 
+                            className="h-full bg-gradient-to-r from-blue-600 to-indigo-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-[1500ms] ease-out"
+                            style={{ width: `${skill.score}%`, transitionDelay: `${idx * 150}ms` }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CV Analysis Report Card */}
+                {result.cvAnalysisReport && (
+                   <div className="glass p-6 rounded-2xl space-y-3 border-l-4 border-l-emerald-500 bg-emerald-500/5">
+                    <div className="flex justify-between items-center relative z-10">
+                      <div className="flex items-center space-x-2">
+                        <SearchCheck className="w-4 h-4 text-emerald-400" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">CV Adat-ellenőrzés</span>
+                      </div>
+                      <div className="p-1 bg-emerald-500/20 rounded-full">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                      </div>
+                    </div>
+                    <div className="text-xs md:text-sm text-slate-300 leading-relaxed italic">
+                      "{result.cvAnalysisReport}"
+                    </div>
+                  </div>
+                )}
 
                 {/* Subject */}
                 <div className="glass p-6 rounded-2xl space-y-3 relative overflow-hidden group border-l-4 border-l-blue-500">

@@ -41,9 +41,16 @@ export interface ApplicationData {
   aiSkills: AISkills;
 }
 
+export interface SkillMatch {
+  label: string;
+  score: number; // 0-100
+}
+
 export interface GenerationResult {
   subject: string;
   emailTemplate: string;
   coverLetter: string;
   salaryNote?: string;
+  cvAnalysisReport?: string;
+  skillAlignment: SkillMatch[];
 }
