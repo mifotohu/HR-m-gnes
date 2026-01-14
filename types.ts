@@ -9,6 +9,12 @@ export enum StyleType {
   CONCISE = 'Tömörség (extra rövid/direkt)'
 }
 
+export enum ToneType {
+  INFORMAL = 'Tegező',
+  FORMAL = 'Magázó',
+  BUSINESS = 'Üzleties'
+}
+
 export interface AISkills {
   llm: number;
   prompting: number;
@@ -31,6 +37,7 @@ export interface ApplicationData {
   position: string;
   salary?: string;
   style: StyleType;
+  tone: ToneType;
   aiSkills: AISkills;
 }
 

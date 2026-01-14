@@ -1,7 +1,7 @@
 
 import React, { useState, useRef } from 'react';
 import { generateHRMaterials } from './services/geminiService';
-import { ApplicationData, GenerationResult, StyleType, AISkills, FileData } from './types';
+import { ApplicationData, GenerationResult, StyleType, ToneType, AISkills, FileData } from './types';
 import SkillSlider from './components/SkillSlider';
 import { 
   Briefcase, 
@@ -24,7 +24,8 @@ import {
   X,
   FileCheck,
   RefreshCw,
-  ShieldAlert
+  ShieldAlert,
+  MessageSquare
 } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -40,6 +41,7 @@ const App: React.FC = () => {
     position: '',
     salary: '',
     style: StyleType.PROFESSIONAL,
+    tone: ToneType.FORMAL,
     aiSkills: {
       llm: 3,
       prompting: 3,
@@ -142,9 +144,9 @@ const App: React.FC = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">
-                AI-HR Expert 2026
+                HR Mágnes 2026
               </h1>
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold -mt-1">Next-Gen ATS Optimization</p>
+              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold -mt-1">ATS Optimization & Recruiting</p>
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-4">
@@ -192,9 +194,9 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs text-slate-500 font-medium">Választott Stílus</label>
+                  <label className="text-xs text-slate-500 font-medium">Levél stílusa</label>
                   <div className="relative">
                     <select 
                       value={formData.style}
@@ -210,6 +212,26 @@ const App: React.FC = () => {
                     </div>
                   </div>
                 </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs text-slate-500 font-medium">Levél hangneme</label>
+                  <div className="relative">
+                    <select 
+                      value={formData.tone}
+                      onChange={(e) => handleInputChange('tone', e.target.value as ToneType)}
+                      className="w-full bg-slate-800/50 border border-white/5 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500/50 transition-all outline-none appearance-none cursor-pointer"
+                    >
+                      {Object.values(ToneType).map(t => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                      <MessageSquare className="w-3 h-3" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs text-slate-500 font-medium">Bérigény (opcionális)</label>
                   <input 
@@ -252,7 +274,6 @@ const App: React.FC = () => {
                   </div>
                 </div>
                 
-                {/* File Upload Zone */}
                 {!formData.cvFile ? (
                   <div 
                     onClick={() => fileInputRef.current?.click()}
@@ -408,7 +429,7 @@ const App: React.FC = () => {
                 <button 
                   onClick={() => handleSubmit()}
                   disabled={loading}
-                  className="flex items-center space-x-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-slate-300 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+                  className="flex items-center space-x-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-slate-300 transition-all hover:scale-105 active:scale-95 disabled:opacity-50 shadow-lg shadow-blue-500/10"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                   <span>ÚJRAGENERÁLÁS</span>
@@ -440,7 +461,7 @@ const App: React.FC = () => {
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
                     <Send className="w-4 h-4 text-indigo-400" />
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Email Sablon (Hossz-kontroll)</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Email Sablon (Min. 1000 karakter)</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="text-[10px] font-mono px-2 py-1 rounded bg-slate-900 border border-white/5">
@@ -506,7 +527,7 @@ const App: React.FC = () => {
                 </div>
                 <p className="text-xs text-slate-400 mt-2 leading-relaxed relative z-10">
                   A fenti dokumentumok szemantikai kulcsszó-illesztése az álláshirdetéshez: <span className="text-green-400 font-bold">94%</span>. 
-                  A stílus szigorúan igazodik a(z) <span className="text-blue-300 italic">{formData.style}</span> elvárásaihoz. 
+                  A stílus szigorúan igazodik a(z) <span className="text-blue-300 italic">{formData.style}</span> és <span className="text-blue-300 italic">{formData.tone}</span> elvárásaihoz. 
                   Az AI-kompetenciák integrálása sikeresen befejeződött.
                 </p>
               </div>
@@ -517,12 +538,11 @@ const App: React.FC = () => {
 
       {/* Footer */}
       <footer className="max-w-7xl mx-auto px-4 py-12 border-t border-white/5 text-center mt-12">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="flex items-center space-x-6">
-            <span className="text-[10px] text-slate-600 uppercase font-mono tracking-widest">VERSIO 2.0.26_FINAL</span>
-            <span className="text-[10px] text-slate-600 uppercase font-mono tracking-widest">SECURE AI PIPELINE</span>
-          </div>
-          <p className="text-xs text-slate-500">&copy; 2024-2026 AI-HR Technológiai Intézet. Pályázati anyagok 2026-os standardok szerint.</p>
+        <div className="flex flex-col items-center space-y-2">
+          <p className="text-xs text-slate-400 font-medium">
+            &copy; 2026. HR Mágnes - készítette: Práger Péter - <a href="https://MIfotografia.hu" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">MIfotografia.hu</a>
+          </p>
+          <p className="text-[10px] text-slate-600 uppercase font-mono tracking-widest">Verzió: 1.0</p>
         </div>
       </footer>
     </div>

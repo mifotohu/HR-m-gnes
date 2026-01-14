@@ -16,6 +16,7 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
     - POSITION: ${data.position}
     - SALARY: ${data.salary || 'Nincs megadva'}
     - STYLE: ${data.style}
+    - TONE (Hangnem): ${data.tone}
     - AI_SKILLS (1-5 skálán):
       Szöveges LLM: ${data.aiSkills.llm}, 
       Prompt Engineering: ${data.aiSkills.prompting}, 
@@ -29,7 +30,7 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
     1. ATS ÉS AI-BOT OPTIMALIZÁLÁS: Használd a JD_DATA kulcsszavait természetes módon. A szemantikai struktúra legyen olyan, hogy az előválasztó rendszerek magas pontszámot adjanak.
     2. AI-TUDÁS INTEGRÁCIÓ: Építsd be az AI_SKILLS értékeket. 4-5 szint esetén emeld ki mint stratégiai versenyelőnyt, 1-3 szint esetén magabiztos digitális kompetenciaként.
     3. 2026-OS TRENDEK: Kerüld a sablonos fordulatokat. Légy lényegre törő és jövőorientált.
-    4. STÍLUS: Szigorúan tartsd magad a kiválasztott STYLE hangvételéhez.
+    4. STÍLUS ÉS HANGNEM: Szigorúan tartsd magad a kiválasztott STYLE (${data.style}) és TONE (${data.tone}) hangvételéhez. Ha a TONE 'Tegező', használd a közvetlenebb stílust, ha 'Magázó' vagy 'Üzleties', maradj a formálisabb kereteknél.
 
     KIMENETI ELVÁRÁSOK:
     - subject: Kattintás-optimalizált tárgy.
