@@ -663,7 +663,7 @@ const App: React.FC = () => {
           <p className="text-sm text-slate-400 font-bold">
             &copy; 2026. HR Mágnes - készítette: Práger Péter - <a href="https://MIfotografia.hu" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors border-b border-blue-500/30">MIfotografia.hu</a>
           </p>
-          <p className="text-[11px] text-slate-600 uppercase font-mono tracking-[0.3em] font-black">AI RECRUITMENT ASSISTANT V1.0</p>
+          <p className="text-[11px] text-slate-600 uppercase font-mono tracking-[0.3em] font-black">Verzió 1.0</p>
         </div>
       </footer>
     </div>
