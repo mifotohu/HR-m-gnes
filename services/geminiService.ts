@@ -31,9 +31,8 @@ export const generateHRMaterials = async (data: ApplicationData & { customApiKey
     1. ATS ÉS AI-BOT OPTIMALIZÁLÁS: Használd a JD_DATA kulcsszavait természetes módon.
     2. CV INTEGRITÁS ELLENŐRZÉSE: Kiemelten figyelj a kinyert adatok pontosságára.
     3. SKILL ALIGNMENT: Számítsd ki az illeszkedést (0-100).
-    4. HANGNEM DIFFERENCIÁLÁS: 
-       - Az emailTemplate kövesse a választott hangnemet (${data.tone}).
-       - A coverLetter (Motivációs Levél) azonban minden esetben legyen hivatalosabb (magázó), még akkor is, ha az email tegező, mert ez a 2026-os professzionális standard.
+    4. HANGNEM: 
+       - Minden kimeneti szöveg (emailTemplate, coverLetter) szigorúan kövesse a választott hangnemet: ${data.tone}.
     5. KIEMELÉS: A kimeneti szövegekben (emailTemplate, coverLetter, cvAnalysisReport) a legfontosabb adatpontokat, kulcsszavakat és elemzési eredményeket emeld ki félkövérrel (Markdown **szöveg** formátumban).
 
     KIMENETI ELVÁRÁSOK:

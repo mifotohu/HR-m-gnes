@@ -155,11 +155,28 @@ const App: React.FC = () => {
     }
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+  const copyRichToClipboard = (text: string) => {
+    // Basic markdown to HTML conversion for the clipboard
+    const html = text
+      .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+      .replace(/\n/g, '<br>');
+    
+    const plainText = text.replace(/\*\*/g, '');
+
+    const blobHtml = new Blob([html], { type: 'text/html' });
+    const blobText = new Blob([plainText], { type: 'text/plain' });
+    
+    const data = [new ClipboardItem({
+      'text/html': blobHtml,
+      'text/plain': blobText
+    })];
+
+    navigator.clipboard.write(data).catch(() => {
+      // Fallback for older browsers
+      navigator.clipboard.writeText(plainText);
+    });
   };
 
-  // Helper to render bold text from **markdown**
   const renderFormattedText = (text: string) => {
     if (!text) return null;
     const parts = text.split(/(\*\*.*?\*\*)/g);
@@ -170,8 +187,6 @@ const App: React.FC = () => {
       return part;
     });
   };
-
-  const jdRemainingChars = 1500 - formData.jdData.length;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 selection:bg-blue-500/30">
@@ -185,7 +200,6 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* Header with API KEY integrated */}
       <header className="border-b border-white/5 bg-slate-900/80 backdrop-blur-xl sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-16 md:h-20 flex items-center justify-between gap-4">
           <div className="flex items-center space-x-4 shrink-0">
@@ -196,7 +210,6 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          {/* API Key Input in Header */}
           <div className="flex-grow max-w-2xl flex items-center gap-2 md:gap-4">
             <div className="relative flex-grow group">
               <div className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500/50 group-focus-within:text-blue-400 transition-colors">
@@ -265,7 +278,6 @@ const App: React.FC = () => {
 
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-10">
         
-        {/* Branding Hero Section */}
         <section className="glass p-8 md:p-10 rounded-3xl border border-blue-500/10 shadow-xl bg-gradient-to-br from-slate-900/50 via-slate-900/80 to-slate-950 flex flex-col md:flex-row md:items-center gap-10 overflow-hidden relative">
           <div className="absolute -top-24 -right-24 w-80 h-80 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none"></div>
           <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-purple-600/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -295,7 +307,6 @@ const App: React.FC = () => {
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Input Form */}
           <div className="lg:col-span-5 space-y-8">
             <form onSubmit={handleSubmit} className="space-y-8">
               
@@ -378,7 +389,6 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              {/* AI Skills Section */}
               <div className="glass p-8 rounded-3xl space-y-6">
                 <h2 className="flex items-center space-x-3 text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">
                   <Sparkles className="w-5 h-5" />
@@ -393,7 +403,6 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              {/* Data Inputs */}
               <div className="glass p-8 rounded-3xl space-y-8">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -456,11 +465,6 @@ const App: React.FC = () => {
                       <Building2 className="w-5 h-5" />
                       <span>Álláshirdetés</span>
                     </h2>
-                    <div className="flex flex-col items-end">
-                      <span className={`text-[11px] font-mono font-black ${jdRemainingChars < 100 ? 'text-red-500' : 'text-blue-500'}`}>
-                        {jdRemainingChars} KARAKTER MARADT
-                      </span>
-                    </div>
                   </div>
                   <textarea 
                     required
@@ -468,7 +472,6 @@ const App: React.FC = () => {
                     value={formData.jdData}
                     onChange={(e) => handleInputChange('jdData', e.target.value)}
                     placeholder="Másolja be az álláshirdetés szövegét..."
-                    maxLength={1500}
                     className="w-full bg-slate-900/50 border border-white/5 rounded-2xl p-5 text-base focus:ring-2 focus:ring-blue-500/50 transition-all outline-none resize-none placeholder:text-slate-700"
                   />
                 </div>
@@ -498,7 +501,6 @@ const App: React.FC = () => {
             </form>
           </div>
 
-          {/* Results Area */}
           <div id="result-section" className="lg:col-span-7 space-y-8">
             {!result && !error && !loading && (
               <div className="h-full flex flex-col items-center justify-center text-center p-16 border border-white/5 rounded-[3rem] bg-slate-900/20 relative overflow-hidden">
@@ -534,7 +536,6 @@ const App: React.FC = () => {
                   </button>
                 </div>
 
-                {/* AI Skill Alignment Chart */}
                 <div className="glass p-8 rounded-3xl space-y-8 border-l-4 border-l-blue-400 overflow-hidden relative shadow-2xl">
                    <div className="absolute -right-8 -top-8 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
                    <div className="flex items-center justify-between relative z-10">
@@ -562,7 +563,6 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
-                {/* CV Analysis Report Card */}
                 {result.cvAnalysisReport && (
                    <div className="glass p-8 rounded-3xl space-y-4 border-l-4 border-l-emerald-500 bg-emerald-500/5 shadow-xl">
                     <div className="flex justify-between items-center relative z-10">
@@ -580,26 +580,24 @@ const App: React.FC = () => {
                   </div>
                 )}
 
-                {/* Subject */}
                 <div className="glass p-8 rounded-3xl space-y-4 relative overflow-hidden group border-l-4 border-l-blue-500 shadow-xl">
                   <div className="flex justify-between items-center relative z-10">
                     <div className="flex items-center space-x-3">
                       <Mail className="w-5 h-5 text-blue-400" />
                       <span className="text-xs font-black uppercase tracking-widest text-slate-500">Kattintás-Optimalizált Tárgy</span>
                     </div>
-                    <button onClick={() => copyToClipboard(result.subject)} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 active:text-blue-400"><Copy className="w-5 h-5" /></button>
+                    <button onClick={() => copyRichToClipboard(result.subject)} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 active:text-blue-400"><Copy className="w-5 h-5" /></button>
                   </div>
                   <div className="text-xl md:text-2xl font-black text-slate-100 mono leading-tight tracking-tight">
                     {result.subject}
                   </div>
                 </div>
 
-                {/* Email Template */}
                 <div className="glass p-8 rounded-3xl space-y-5 border-l-4 border-l-indigo-500 shadow-xl">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-3">
                       <Send className="w-5 h-5 text-indigo-400" />
-                      <span className="text-xs font-black uppercase tracking-widest text-slate-500">Email Sablon</span>
+                      <span className="text-xs font-black uppercase tracking-widest text-slate-500">Email Sablon ({formData.tone})</span>
                     </div>
                     <div className="flex items-center space-x-4">
                       <div className="text-[11px] font-mono px-3 py-1 rounded-full bg-slate-900 border border-white/5 font-bold">
@@ -609,7 +607,7 @@ const App: React.FC = () => {
                           <span className="text-green-400">OPTIMÁLIS HOSSZ ({result.emailTemplate.length})</span>
                         )}
                       </div>
-                      <button onClick={() => copyToClipboard(result.emailTemplate)} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 active:text-indigo-400"><Copy className="w-5 h-5" /></button>
+                      <button onClick={() => copyRichToClipboard(result.emailTemplate)} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 active:text-indigo-400"><Copy className="w-5 h-5" /></button>
                     </div>
                   </div>
                   <div className="bg-slate-900/80 rounded-2xl p-8 text-base md:text-lg leading-relaxed whitespace-pre-wrap text-slate-300 border border-white/5 font-mono shadow-inner max-h-[500px] overflow-y-auto scrollbar-thin">
@@ -617,14 +615,13 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Cover Letter */}
                 <div className="glass p-8 rounded-3xl space-y-6 border-l-4 border-l-purple-500 shadow-xl">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-3">
                       <BookOpen className="w-5 h-5 text-purple-400" />
-                      <span className="text-xs font-black uppercase tracking-widest text-slate-500">Motivációs Levél (Magázó)</span>
+                      <span className="text-xs font-black uppercase tracking-widest text-slate-500">Motivációs Levél ({formData.tone})</span>
                     </div>
-                    <button onClick={() => copyToClipboard(result.coverLetter + (result.salaryNote ? "\n\n" + result.salaryNote : ""))} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 active:text-purple-400"><Copy className="w-5 h-5" /></button>
+                    <button onClick={() => copyRichToClipboard(result.coverLetter + (result.salaryNote ? "\n\n" + result.salaryNote : ""))} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-400 active:text-purple-400"><Copy className="w-5 h-5" /></button>
                   </div>
                   <div className="bg-slate-900/80 rounded-2xl p-10 md:p-12 text-base md:text-lg leading-relaxed whitespace-pre-wrap text-slate-300 border border-white/5 shadow-inner">
                     {renderFormattedText(result.coverLetter)}
@@ -648,7 +645,7 @@ const App: React.FC = () => {
                   <p className="text-sm md:text-base text-slate-400 mt-3 leading-relaxed">
                     A fenti dokumentumok szemantikai kulcsszó-illesztése az álláshirdetéshez: <span className="text-green-400 font-black">94%</span>. 
                     A stílus: <span className="text-blue-300 font-bold">{formData.style}</span>. 
-                    A hangnem: <span className="text-blue-300 font-bold">{formData.tone}</span> (Email) / <span className="text-blue-300 font-bold">Magázó</span> (Cover Letter).
+                    A hangnem: <span className="text-blue-300 font-bold">{formData.tone}</span>.
                   </p>
                 </div>
               </div>
@@ -657,13 +654,12 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="max-w-7xl mx-auto px-4 py-16 border-t border-white/5 text-center mt-16">
         <div className="flex flex-col items-center space-y-3">
           <p className="text-sm text-slate-400 font-bold">
             &copy; 2026. HR Mágnes - készítette: Práger Péter - <a href="https://MIfotografia.hu" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors border-b border-blue-500/30">MIfotografia.hu</a>
           </p>
-          <p className="text-[11px] text-slate-600 uppercase font-mono tracking-[0.3em] font-black">Verzió 1.0</p>
+          <p className="text-[11px] text-slate-600 uppercase font-mono tracking-[0.3em] font-black">AI RECRUITMENT ASSISTANT V1.0</p>
         </div>
       </footer>
     </div>
