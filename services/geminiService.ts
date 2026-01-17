@@ -2,9 +2,9 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ApplicationData, GenerationResult } from "../types";
 
-export const generateHRMaterials = async (data: ApplicationData & { customApiKey?: string }): Promise<GenerationResult> => {
-  const apiKeyToUse = data.customApiKey || process.env.API_KEY;
-  const ai = new GoogleGenAI({ apiKey: apiKeyToUse || "" });
+export const generateHRMaterials = async (data: ApplicationData): Promise<GenerationResult> => {
+  // A rendszer utasításoknak megfelelően kizárólag a process.env.API_KEY-t használjuk.
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
   
   const promptText = `
     SZEREPKÖR:
@@ -31,16 +31,17 @@ export const generateHRMaterials = async (data: ApplicationData & { customApiKey
     1. ATS ÉS AI-BOT OPTIMALIZÁLÁS: Használd a JD_DATA kulcsszavait természetes módon.
     2. CV INTEGRITÁS ELLENŐRZÉSE: Kiemelten figyelj a kinyert adatok pontosságára.
     3. SKILL ALIGNMENT: Számítsd ki az illeszkedést (0-100).
-    4. HANGNEM: 
-       - Minden kimeneti szöveg (emailTemplate, coverLetter) szigorúan kövesse a választott hangnemet: ${data.tone}.
-    5. KIEMELÉS: A kimeneti szövegekben (emailTemplate, coverLetter, cvAnalysisReport) a legfontosabb adatpontokat, kulcsszavakat és elemzési eredményeket emeld ki félkövérrel (Markdown **szöveg** formátumban).
+    4. HANGNEM KÖVETKEZETESSÉG: 
+       - MINDEN kimeneti szöveg (az emailTemplate ÉS a coverLetter is) szigorúan kövesse a választott hangnemet: ${data.tone}. 
+       - Ha a hangnem Tegező, akkor a Motivációs levélben is tegeződj, ne válts magázásra!
+    5. KIEMELÉS: A kimeneti szövegekben (emailTemplate, coverLetter, cvAnalysisReport) a legfontosabb adatpontokat, kulcsszavakat és eredményeket emeld ki félkövérrel (Markdown **szöveg** formátumban).
 
     KIMENETI ELVÁRÁSOK:
     - subject: RÖVID, de rendkívül figyelemfelkeltő, motiváló és kattintásvadász tárgy.
     - emailTemplate: RÉSZLETES (min. 1000 karakter), meggyőző üzenet félkövér kiemelésekkel.
-    - coverLetter: Professzionális dokumentum, modern struktúra, félkövér kiemelésekkel.
+    - coverLetter: Professzionális dokumentum, modern struktúra, félkövér kiemelésekkel, a választott ${data.tone} hangnemben.
     - salaryNote: Elegánsan beépített bérigény.
-    - cvAnalysisReport: Részletes elemzés a kinyert adatokról, logikai hibákról, félkövérrel kiemelve a kritikus pontokat.
+    - cvAnalysisReport: Részletes elemzés félkövérrel kiemelve a kritikus pontokat, NEM dőlt betűvel.
     - skillAlignment: 5 darab objektumot tartalmazó tömb (label, score).
 
     Válaszolj JSON formátumban.
