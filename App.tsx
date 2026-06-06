@@ -282,7 +282,27 @@ const App: React.FC = () => {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-xs text-slate-500 font-black uppercase tracking-widest">Bérigény</label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs text-slate-500 font-black uppercase tracking-widest">Bérigény</label>
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        const position = formData.position.toLowerCase();
+                        const suggestions: Record<string, string> = {
+                          'fejlesztő': '1.2M - 1.8M HUF',
+                          'architect': '1.8M - 2.5M HUF',
+                          'designer': '1.0M - 1.5M HUF',
+                          'manager': '1.5M - 2.2M HUF',
+                          'ügyfél': '0.9M - 1.3M HUF',
+                        };
+                        const match = Object.keys(suggestions).find(k => position.includes(k));
+                        if (match) handleInputChange('salary', suggestions[match]);
+                      }}
+                      className="text-xs font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 transition-colors"
+                    >
+                      AI Ajánlás
+                    </button>
+                  </div>
                   <input 
                     type="text" 
                     value={formData.salary}

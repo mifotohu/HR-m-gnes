@@ -65,7 +65,7 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
   }
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3.1-pro-preview',
+    model: 'gemini-1.5-flash',
     contents: { parts: contents },
     config: {
       responseMimeType: "application/json",
