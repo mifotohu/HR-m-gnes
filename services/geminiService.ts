@@ -3,8 +3,14 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { ApplicationData, GenerationResult } from "../types";
 
 export const generateHRMaterials = async (data: ApplicationData): Promise<GenerationResult> => {
-  // A rendszer utasításoknak megfelelően kizárólag a process.env.API_KEY-t használjuk.
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+  const ai = new GoogleGenAI({ 
+    apiKey: process.env.API_KEY || "",
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build',
+      }
+    }
+  });
   
   const promptText = `
     SZEREPKÖR:
@@ -59,7 +65,7 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
   }
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-3.1-pro-preview',
     contents: { parts: contents },
     config: {
       responseMimeType: "application/json",

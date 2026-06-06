@@ -1,5 +1,6 @@
 {
   "name": "HR-magnes-jo verzio ✨",
   "description": "A 2026-os szintű HR technológiai asszisztens, amely ATS-optimalizált pályázati anyagokat generál AI-alapú szűrőrendszerekhez és emberi toborzókhoz egyaránt.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
