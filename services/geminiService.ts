@@ -41,6 +41,7 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
        - MINDEN kimeneti szöveg (az emailTemplate ÉS a coverLetter is) szigorúan kövesse a választott hangnemet: ${data.tone}. 
        - Ha a hangnem Tegező, akkor a Motivációs levélben is tegeződj, ne válts magázásra!
     5. KIEMELÉS: A kimeneti szövegekben (emailTemplate, coverLetter, cvAnalysisReport) a legfontosabb adatpontokat, kulcsszavakat és eredményeket emeld ki félkövérrel (Markdown **szöveg** formátumban).
+    6. COACHING TIPPEK: Adj 3 gyakorlati, azonnal bevethető interjú/pályázati tippet a konkrét JD és a jelölt CV erősségei alapján. A tippet kizárólag magyar nyelven írd.
 
     KIMENETI ELVÁRÁSOK:
     - subject: RÖVID, de rendkívül figyelemfelkeltő, motiváló és kattintásvadász tárgy.
@@ -49,6 +50,7 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
     - salaryNote: Elegánsan beépített bérigény.
     - cvAnalysisReport: Részletes elemzés félkövérrel kiemelve a kritikus pontokat, NEM dőlt betűvel.
     - skillAlignment: 5 darab objektumot tartalmazó tömb (label, score).
+    - coachingTips: 3 darab string-ből álló tömb, gyakorlatias interjútippekkel.
 
     Válaszolj JSON formátumban.
   `;
@@ -87,9 +89,15 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
               },
               required: ["label", "score"]
             }
+          },
+          coachingTips: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.STRING
+            }
           }
         },
-        required: ["subject", "emailTemplate", "coverLetter", "cvAnalysisReport", "skillAlignment"]
+        required: ["subject", "emailTemplate", "coverLetter", "cvAnalysisReport", "skillAlignment", "coachingTips"]
       },
       temperature: 0.7,
     },

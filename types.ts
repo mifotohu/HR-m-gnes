@@ -53,4 +53,5 @@ export interface GenerationResult {
   salaryNote?: string;
   cvAnalysisReport?: string;
   skillAlignment: SkillMatch[];
+  coachingTips: string[];
 }

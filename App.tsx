@@ -502,6 +502,27 @@ const App: React.FC = () => {
                   </div>
                 )}
 
+                {result.coachingTips && result.coachingTips.length > 0 && (
+                  <div className="glass p-10 rounded-[2rem] space-y-6 border-l-8 border-l-amber-500 bg-amber-500/5 shadow-2xl">
+                    <div className="flex justify-between items-center relative z-10">
+                      <div className="flex items-center space-x-4">
+                        <Target className="w-7 h-7 text-amber-400" />
+                        <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">AI Coaching - Interjú Tippek</span>
+                      </div>
+                    </div>
+                    <ul className="space-y-4">
+                      {result.coachingTips.map((tip, idx) => (
+                        <li key={idx} className="flex items-start space-x-4 bg-slate-900/50 p-6 rounded-2xl border border-white/5">
+                          <span className="text-amber-400 font-black text-xl mt-1">{idx + 1}.</span>
+                          <span className="text-lg md:text-xl text-slate-300 leading-relaxed font-medium">
+                            {renderFormattedText(tip)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 <div className="glass p-10 rounded-[2rem] space-y-6 relative overflow-hidden group border-l-8 border-l-blue-500 shadow-2xl">
                   <div className="flex justify-between items-center relative z-10">
                     <div className="flex items-center space-x-4">
