@@ -54,4 +54,10 @@ export interface GenerationResult {
   cvAnalysisReport?: string;
   skillAlignment: SkillMatch[];
   coachingTips: string[];
+  cvStrengthScore?: {
+    overallScore: number;
+    experienceScore: number;
+    projectScore: number;
+    evaluationText: string;
+  };
 }

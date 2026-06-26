@@ -487,6 +487,57 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
+                {result.cvStrengthScore && (
+                  <div className="glass p-10 rounded-[2.5rem] space-y-10 border-l-8 border-l-cyan-400 shadow-2xl relative overflow-hidden">
+                    <div className="absolute -left-16 -bottom-16 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                    <div className="flex items-center justify-between relative z-10">
+                      <div className="flex items-center space-x-4">
+                        <Target className="w-6 h-6 text-cyan-400" />
+                        <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">CV Erősség Elemzés (Relevancia)</span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                      <div className="flex flex-col items-center justify-center p-6 bg-slate-900/50 rounded-3xl border border-white/5">
+                        <span className="text-sm font-black text-slate-500 uppercase tracking-widest mb-4">Összpontszám</span>
+                        <div className="relative w-32 h-32 flex items-center justify-center">
+                          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-800" />
+                            <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="251.2" strokeDashoffset={251.2 - (251.2 * result.cvStrengthScore.overallScore) / 100} className="text-cyan-400 transition-all duration-1000 ease-out" />
+                          </svg>
+                          <span className="absolute text-3xl font-black text-cyan-400">{result.cvStrengthScore.overallScore}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-center justify-center p-6 bg-slate-900/50 rounded-3xl border border-white/5">
+                        <span className="text-sm font-black text-slate-500 uppercase tracking-widest mb-4">Tapasztalat</span>
+                        <div className="relative w-32 h-32 flex items-center justify-center">
+                          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-800" />
+                            <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="251.2" strokeDashoffset={251.2 - (251.2 * result.cvStrengthScore.experienceScore) / 100} className="text-blue-500 transition-all duration-1000 ease-out" />
+                          </svg>
+                          <span className="absolute text-3xl font-black text-blue-500">{result.cvStrengthScore.experienceScore}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-center justify-center p-6 bg-slate-900/50 rounded-3xl border border-white/5">
+                        <span className="text-sm font-black text-slate-500 uppercase tracking-widest mb-4">Projektek</span>
+                        <div className="relative w-32 h-32 flex items-center justify-center">
+                          <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-800" />
+                            <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="251.2" strokeDashoffset={251.2 - (251.2 * result.cvStrengthScore.projectScore) / 100} className="text-indigo-400 transition-all duration-1000 ease-out" />
+                          </svg>
+                          <span className="absolute text-3xl font-black text-indigo-400">{result.cvStrengthScore.projectScore}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-lg text-slate-300 leading-relaxed font-medium bg-slate-900/30 p-6 rounded-2xl border border-white/5">
+                      {result.cvStrengthScore.evaluationText}
+                    </div>
+                  </div>
+                )}
+
                 {result.cvAnalysisReport && (
                    <div className="glass p-10 rounded-[2rem] space-y-6 border-l-8 border-l-emerald-500 bg-emerald-500/5 shadow-2xl">
                     <div className="flex justify-between items-center relative z-10">
@@ -577,7 +628,7 @@ const App: React.FC = () => {
                     <h4 className="font-black text-base uppercase tracking-[0.3em]">ATS VALIDÁCIÓS JELENTÉS</h4>
                   </div>
                   <p className="text-base md:text-lg text-slate-400 mt-4 leading-relaxed font-medium">
-                    A dokumentumok szemantikai kulcsszó-illesztése: <span className="text-green-400 font-black">94%</span>. 
+                    A dokumentumok szemantikai kulcsszó-illesztése: <span className="text-green-400 font-black">{result.cvStrengthScore ? result.cvStrengthScore.overallScore : Math.round(result.skillAlignment.reduce((sum, skill) => sum + skill.score, 0) / Math.max(result.skillAlignment.length, 1))}%</span>. 
                     A választott stílus: <span className="text-blue-300 font-bold uppercase tracking-widest">{formData.style}</span>. 
                     A hangnem: <span className="text-blue-300 font-bold uppercase tracking-widest">{formData.tone}</span>.
                   </p>

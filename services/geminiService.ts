@@ -42,6 +42,7 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
        - Ha a hangnem Tegező, akkor a Motivációs levélben is tegeződj, ne válts magázásra!
     5. KIEMELÉS: A kimeneti szövegekben (emailTemplate, coverLetter, cvAnalysisReport) a legfontosabb adatpontokat, kulcsszavakat és eredményeket emeld ki félkövérrel (Markdown **szöveg** formátumban).
     6. COACHING TIPPEK: Adj 3 gyakorlati, azonnal bevethető interjú/pályázati tippet a konkrét JD és a jelölt CV erősségei alapján. A tippet kizárólag magyar nyelven írd.
+    7. CV ERŐSSÉG ELEMZÉS (cvStrengthScore): Értékeld vizuálisan a CV-ben található projekteket és munkatapasztalatot az álláshirdetés (JD) relevanciája alapján, pontozva az összpontszámot, a tapasztalatot és a projekteket 0-100 közötti értékekkel. Írj hozzá egy rövid, szöveges értékelést is.
 
     KIMENETI ELVÁRÁSOK:
     - subject: RÖVID, de rendkívül figyelemfelkeltő, motiváló és kattintásvadász tárgy.
@@ -51,6 +52,7 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
     - cvAnalysisReport: Részletes elemzés félkövérrel kiemelve a kritikus pontokat, NEM dőlt betűvel.
     - skillAlignment: 5 darab objektumot tartalmazó tömb (label, score).
     - coachingTips: 3 darab string-ből álló tömb, gyakorlatias interjútippekkel.
+    - cvStrengthScore: Egy objektum (overallScore, experienceScore, projectScore, evaluationText), ami az álláshirdetéshez való relevanciát pontozza.
 
     Válaszolj JSON formátumban.
   `;
@@ -95,9 +97,19 @@ export const generateHRMaterials = async (data: ApplicationData): Promise<Genera
             items: {
               type: Type.STRING
             }
+          },
+          cvStrengthScore: {
+            type: Type.OBJECT,
+            properties: {
+              overallScore: { type: Type.NUMBER },
+              experienceScore: { type: Type.NUMBER },
+              projectScore: { type: Type.NUMBER },
+              evaluationText: { type: Type.STRING }
+            },
+            required: ["overallScore", "experienceScore", "projectScore", "evaluationText"]
           }
         },
-        required: ["subject", "emailTemplate", "coverLetter", "cvAnalysisReport", "skillAlignment", "coachingTips"]
+        required: ["subject", "emailTemplate", "coverLetter", "cvAnalysisReport", "skillAlignment", "coachingTips", "cvStrengthScore"]
       },
       temperature: 0.7,
     },
